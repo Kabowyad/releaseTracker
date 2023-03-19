@@ -3,6 +3,14 @@ package org.neon.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.neon.controller.exceptions.ResourceNotFoundException;
+import org.neon.entity.Release;
+import org.neon.entity.enums.ReleaseStatus;
+import org.neon.models.request.CreateReleaseRequest;
+import org.neon.models.request.UpdateReleaseRequest;
+import org.neon.models.response.ReleaseResponse;
+import org.neon.repository.ReleaseFilter;
+import org.neon.service.ReleaseService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +25,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/releases")
 public class ReleaseController {
 
-
     private final ReleaseService service;
 
     /**
@@ -28,7 +35,7 @@ public class ReleaseController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ReleaseResponseDto createRelease(@RequestBody @Valid CreateReleaseRequest request) {
+    public ReleaseResponse createRelease(@RequestBody @Valid CreateReleaseRequest request) {
 
         Release createdRelease = service.createRelease(request);
         log.info("Created release with id {} and status {}", createdRelease.getId(), createdRelease.getStatus());
@@ -45,7 +52,7 @@ public class ReleaseController {
      * @return a list of DTO representations of the filtered releases
      */
     @GetMapping
-    public List<ReleaseResponseDto> getFilteredReleases(
+    public List<ReleaseResponse> getFilteredReleases(
             @RequestParam(name = "status", required = false) ReleaseStatus status,
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "start_date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -88,16 +95,16 @@ public class ReleaseController {
      * @throws ResourceNotFoundException    if no release with the given ID is found
      */
     @PutMapping("/{id}")
-    public ReleaseResponseDto updateRelease(
+    public ReleaseResponse updateRelease(
             @PathVariable("id") Long id,
             @RequestBody UpdateReleaseRequest releaseRequestDto) {
 
         return mapReleaseToResponse(service.updateRelease(id, releaseRequestDto));
     }
 
-    private ReleaseResponseDto mapReleaseToResponse(Release release) {
+    private ReleaseResponse mapReleaseToResponse(Release release) {
 
-        return new ReleaseResponseDto(release.getId(), release.getName(), release.getDescription(),
+        return new ReleaseResponse(release.getId(), release.getName(), release.getDescription(),
                 release.getStatus(), release.getReleaseDate(), release.getCreatedAt(),
                 release.getLastUpdatedAt());
     }
