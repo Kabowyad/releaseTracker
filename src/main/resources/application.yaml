@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    hikari:
+      pool-name: postges-db-pool
+      maximum-pool-size: 10
+      minimum-idle: 2
+      leak-detection-threshold: 30000
+    url: jdbc:postgresql://localhost:5432/neon-db?prepareThreshold=0
+    username: postgres
+    password: password
+  jpa:
+    show-sql: false
+    generate-ddl: false
+    properties:
+      hibernate:
+        ddl-auto: none
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+management:
+  server:
+    port: 8080
+  endpoint:
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "health, prometheus"
+  metrics:
+    distribution:
+      percentiles:
+        "[http.server.requests]": 0.90, 0.95, 0.99
+      slo:
+        "[http.server.requests]": 100ms,200ms,500ms
+    enable:
+      http_server_requests: true
+    export:
+      prometheus: true
