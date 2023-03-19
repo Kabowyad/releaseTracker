@@ -84,6 +84,7 @@ public class ReleaseController {
     public void deleteRelease(@PathVariable Long id) {
 
         service.deleteRelease(id);
+        log.info("Deleted release with id {}", id);
     }
 
     /**
@@ -99,7 +100,9 @@ public class ReleaseController {
             @PathVariable("id") Long id,
             @RequestBody UpdateReleaseRequest releaseRequestDto) {
 
-        return mapReleaseToResponse(service.updateRelease(id, releaseRequestDto));
+        ReleaseResponse response =  mapReleaseToResponse(service.updateRelease(id, releaseRequestDto));
+        log.info("Updated release with id {}", id);
+        return response;
     }
 
     private ReleaseResponse mapReleaseToResponse(Release release) {
