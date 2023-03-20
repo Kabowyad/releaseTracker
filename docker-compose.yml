@@ -15,7 +15,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     networks:
-      - my-network
+      - service-network
 
   database:
     image: postgres
@@ -31,6 +31,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - service-network
 
   grafana:
     image: grafana/grafana-oss:8.5.2
@@ -43,8 +45,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_SERVER_DOMAIN=localhost
     networks:
-      - my-network
+      - service-network
 
 networks:
-  my-network:
+  service-network:
     driver: bridge

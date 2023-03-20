@@ -15,7 +15,7 @@
         - SPRING_DATASOURCE_PASSWORD=password
         - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       networks:
-        - my-network
+        - service-network
 
     database:
       image: postgres
@@ -32,23 +32,8 @@
         timeout: 5s
         retries: 5
       networks:
-        - my-networkx
-
-    elk:
-      image: sebp/elk
-      container_name: neon-elk-container
-      ports:
-        - "5601:5601"
-        - "9200:9200"
-        - "5044:5044"
-      environment:
-        - ES_HEAP_SIZE=1g
-        - LS_HEAP_SIZE=256m
-      volumes:
-        - ./logstash:/etc/logstash/conf.d/
-      networks:
-        - my-network
+        - service-network
 
   networks:
-    my-network:
+    service-network:
       driver: bridge

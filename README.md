@@ -41,5 +41,5 @@ Release tracker requires docker and docker-compose to run.
 
 The application folder has two Docker Compose files.
 1. The docker-compose.light.yml file is for starting the application and database only.
-2. The docker-compose.yml file is for starting the application, database, Grafana, Prometheus, and ELK stack.
+2. The docker-compose.yml file is for starting the application, database, Grafana.
 ## License
